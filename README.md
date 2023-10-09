@@ -15,7 +15,7 @@ L’ensemble des machines sont sur le même réseau.
 | Jérôme  | Scrum Master  | Garant de la progression et de l'application de la méthode scrum |
 
 ## Choix Techniques
-1) paramétrage identique pour l'ensemble de l'équipe
+1) Paramétrage identique pour l'ensemble de l'équipe
 
 | **Machines**   | **Adresses IP** |
 |----------------|-----------------|
@@ -23,6 +23,9 @@ L’ensemble des machines sont sur le même réseau.
 | Debian 12      | 192.168.1.20    |
 | Win 10         | 192.168.1.100   |
 | Ubuntu 22.04   | 192.168.1.200   |
+
+2) Priorité de réaliser un premier script en bash
+3) Trouver l'ensemble des fonctions Bash pour les actions à réaliser sur les machines et les utilisateurs
 
 ## Les difficultés rencontrées
 
