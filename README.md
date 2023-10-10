@@ -10,9 +10,10 @@ L’ensemble des machines sont sur le même réseau.
 
 | NOM     | Roles         | Tâches                                                     |
 |---------|---------------|------------------------------------------------------------------|
-| Vincent |               |                                                                  |
-| Thomas  | Product Owner | Garant de la qualité du produit final et représentant du client  |
-| Jérôme  | Scrum Master  | Garant de la progression et de l'application de la méthode scrum |
+| Vincent |               | Recherche sur la méthode et commande des actions dédiées aux log.                                                            |
+| Thomas  | Product Owner | Garant de la qualité du produit final et représentant du client. Recherche sur la méthode et commande des actions dédiées aux actions dédiées aux utilisateurs.
+|
+| Jérôme  | Scrum Master  | Garant de la progression et de l'application de la méthode scrum. Recherche sur la méthode et commande des actions dédiées aux actions dédiées aux machines. |
 
 ## Choix Techniques
 1) Paramétrage identique pour l'ensemble de l'équipe
