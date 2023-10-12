@@ -28,7 +28,8 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 | Ubuntu 22.04   | 192.168.1.200   |
 
 2) Priorité de réaliser un premier script en bash
-3) Trouver l'ensemble des fonctions Bash pour les actions à réaliser sur les machines et les utilisateurs. 
+3) Trouver l'ensemble des fonctions Bash et Powershell pour les actions à réaliser sur les machines et les utilisateurs. 
+4) installer SSH et le configurer sur chaque machine.
 
 ## Les difficultés rencontrées
 
