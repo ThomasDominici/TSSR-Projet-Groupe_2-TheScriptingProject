@@ -14,8 +14,8 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 | NOM     | Roles         | Tâches                                                     |
 |---------|---------------|------------------------------------------------------------------|
 | Vincent |               |Recherche sur la méthode et commande des actions dédiées aux log.           |
-| Thomas  | Product Owner |Garant de la qualité du produit final et représentant du client. Recherche sur la méthode et commande des actions dédiées aux actions dédiées aux utilisateurs.|
-| Jérôme  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Recherche sur la méthode et commande des actions dédiées aux actions dédiées aux machines.|
+| Thomas  | Product Owner |Garant de la qualité du produit final et représentant du client. Recherche sur la méthode et commande des actions dédiées aux utilisateurs.|
+| Jérôme  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Recherche sur la méthode et commande des actions dédiées aux machines.|
 
 ## Choix Techniques
 1) Paramétrage identique pour l'ensemble de l'équipe
