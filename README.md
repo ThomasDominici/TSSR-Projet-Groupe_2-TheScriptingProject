@@ -22,8 +22,8 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 | NOM     | Roles         | Tâches                                                     |
 |---------|---------------|------------------------------------------------------------------|
 | Thomas |               |Création d'une partie du script Linux sur les informations et recherche sur le protocole SSH plus poussée.          |
-| Jérôme  | Product Owner |Garant de la qualité du produit final et représentant du client. Création d'une partie du code Linux sur les actions. Prise de contrôle en remote
-| Vincent  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Création de la trame du script Windows et recherche des commandes permettant la prise de contrôle d'un ordniateru à un autre
+| Vincent  | Product Owner |Garant de la qualité du produit final et représentant du client. Création d'une partie du code Linux sur les actions. Prise de contrôle en remote
+| Jérôme  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Création de la trame du script Windows et recherche des commandes permettant la prise de contrôle d'un ordniateru à un autre
 
 ## Choix Techniques
 1) Paramétrage identique pour l'ensemble de l'équipe
@@ -103,11 +103,11 @@ Cette commande semble fonctionner sur des scripts simples mais pas sur notre scr
 
 ## Les tests réalisés
 
-Nous avons testé la méthode SSH d'un Débian à un Ubuntu.
-Nous avons créé un script Linux complet en local et rajouté les commandes SSH pour chaque information demandée. 
-Nous avons cherché et testé différentes méthodes de prise de contrôle remote entre deux machines Windows.
+Nous avons testé la méthode SSH d'un Débian à un Ubuntu.  
+Nous avons créé un script Linux complet en local et rajouté les commandes SSH pour chaque information demandée.   
+Nous avons cherché et testé différentes méthodes de prise de contrôle remote entre deux machines Windows.  
 
 ## Futures améliorations
 
-Nous devons continuer de chercher les commandes et tester le tunnel SSH sur les autres machines. Nous utiliserons peut-être PuTTY pour Windows.
-Nous allons résoudre les problèmes de SSH sur le script Bash et prendre aussi le contrôle de notre machine Windows 10 avec le serveur Windows.
+Nous devons continuer de chercher les commandes et tester le tunnel SSH sur les autres machines. Nous utiliserons peut-être PuTTY pour Windows.  
+Nous allons résoudre les problèmes de SSH sur le script Bash et prendre aussi le contrôle de notre machine Windows 10 avec le serveur Windows.  
