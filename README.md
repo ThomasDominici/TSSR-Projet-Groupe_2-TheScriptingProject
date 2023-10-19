@@ -17,6 +17,14 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 | Thomas  | Product Owner |Garant de la qualité du produit final et représentant du client. Recherche sur la méthode et commande des actions dédiées aux utilisateurs.|
 | Jérôme  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Recherche sur la méthode et commande des actions dédiées aux machines.|
 
+## Semaine 2
+
+| NOM     | Roles         | Tâches                                                     |
+|---------|---------------|------------------------------------------------------------------|
+| Thomas |               |Création d'une partie du script Linux sur les informations et recherche sur le protocole SSH plus poussée.          |
+| Jérôme  | Product Owner |Garant de la qualité du produit final et représentant du client. Création d'une partie du code Linux sur les actions. Prise de contrôle en remote
+| Vincent  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Création de la trame du script Windows et recherche des commandes permettant la prise de contrôle d'un ordniateru à un autre
+
 ## Choix Techniques
 1) Paramétrage identique pour l'ensemble de l'équipe
 
@@ -31,6 +39,10 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 3) Trouver l'ensemble des fonctions Bash et Powershell pour les actions à réaliser sur les machines et les utilisateurs. 
 4) installer SSH et le configurer sur chaque machine.
 
+### Deux scripts : 
+1) Un script en Bash depuis le serveur Debian.
+2) Un script en PowerShell depuis le serveur Windows Server.
+
 ## Les difficultés rencontrées
 
 1- Nous devons mettre en réseau nos quatre machines. Nous avons rencontré des difficultés à paramétrer une IP fixe pour le serveur Debian.
@@ -41,6 +53,10 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 - Windows Server vers Ubuntu
 
 Les commandes permettant des actions sur un OS ne sont pas forcément les mêmes sur un autre.
+
+3- Nous avons rencontré des difficultés à exécuter plusieurs commandes dans un tunnel SSH. 
+
+4- La prise de contrôle à distance en PowerShell est encore énigmatique, nous avons du mal à prendre le contrôle de la machine Windows 10 depuis la machine Windows Server.
 
 ## Les solutions
 
@@ -70,10 +86,28 @@ ssh wilder@192.168.1.x
 ```
 On rentre le mot de passe de la machine cible et pouvons la contrôler depuis le poste émetteur.
 
+3- Nous pouvons remettre la commande SSH devant chaque commande. Cela implique de devoir retaper le code de la machine cible avant chaque résultat. Il existe une autre solution en passant par un autre script et en effectuant la commande 
+```Bash
+#! /bin/bash
+
+read -p "Veuillez entrer le nom d'utilisateur : " user
+read -p "Veuillez entrer l'adresse IP de la machine cible : " ipAddress
+
+user=$user
+ipAddress=$ipAddress
+
+ssh $user@$ipAddress 'bash -s' < <nomDuScriptALancer.sh>
+```
+
+Cette commande semble fonctionner sur des scripts simples mais pas sur notre script cible pour le moment.
+
 ## Les tests réalisés
 
 Nous avons testé la méthode SSH d'un Débian à un Ubuntu.
+Nous avons créé un script Linux complet en local et rajouté les commandes SSH pour chaque information demandée. 
+Nous avons cherché et testé différentes méthodes de prise de contrôle remote entre deux machines Windows.
 
 ## Futures améliorations
 
 Nous devons continuer de chercher les commandes et tester le tunnel SSH sur les autres machines. Nous utiliserons peut-être PuTTY pour Windows.
+Nous allons résoudre les problèmes de SSH sur le script Bash et prendre aussi le contrôle de notre machine Windows 10 avec le serveur Windows.
