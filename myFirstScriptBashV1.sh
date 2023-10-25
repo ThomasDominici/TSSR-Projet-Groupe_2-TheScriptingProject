@@ -284,12 +284,12 @@ else
 ssh $utilisateurSSH@$AdresseIpSSH 	"
 					if [ -d $cheminDossier ] && [ ! -d $dossierRenommer ]
 					then
-						mv $cheminDossier $dossierRenommer && echo 'Le dossier $cheminDossier à été renommé en $DossierRenommer'
+						mv $cheminDossier $dossierRenommer && echo 'Le dossier $cheminDossier à été renommé en $dossierRenommer'
 					else
 						echo 'Vérifié les chemins saisies'
 					fi"
 fi
-echo " $(date "+%F")_$(date "+%H:%M:%S")_$chemin  Renommage du dossier $cheminDossier en $DossierRenommer" >> /var/log/log_actions.log
+echo " $(date "+%F")_$(date "+%H:%M:%S")_$chemin  Renommage du dossier $cheminDossier en $dossierRenommer" >> /var/log/log_actions.log
 }
 
 #Suppression de répertoire
