@@ -1,0 +1,6 @@
+lancer en sudo sur le root du distant | suppression d'utilisateur : message d'erreur suivant apparait " userdel: Reptincel mail spool (/var/mail/Reptincel) not found 
+lancer en sudo sur le root du distant | Mise a jour systeme : MARCHE A MOITIER (je vais voir avec dom mais je pense que c'est du au faite que j'essaye de apt update et upgrade une debian 11
+lancer en sudo sur le root du distant | verouillage machine : la commande plante la machine a voir si c'est a cause de debian 11 (ce que je pense)
+lancer en sudo sur le root du distant et en sudo sur un utilisateur courant | resultat bizarre a approfondir
+verifier le dernier menu
+
