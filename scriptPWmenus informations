@@ -1,0 +1,314 @@
+#------------------------------fonction 01 Date de dernière connection d’un utilisateur
+function LastConnectionUser {
+    $Lastconnection = Invoke-Command -ComputerName CLIWINP2 -Credential "WORKGROUP\jerom" -ScriptBlock {
+        $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
+    
+        # Rechercher la date de la dernière connexion de l'utilisateur
+        $evenement = Get-WinEvent -LogName "Security" | Where-Object { $_.Id -eq 4624 -and $_.Properties[5].Value -eq $utilisateur } | Select-Object -First 1
+    
+        if ($evenement) {
+            $dateDerniereConnexion = $evenement.TimeCreated
+            Write-Host "La date de la dernière connexion de $utilisateur est : $dateDerniereConnexion"
+        } else {
+            Write-Host "L'utilisateur $utilisateur n'a pas de connexion enregistrée."
+        }
+    }
+    $Lastconnection
+}
+
+#-----------------------------fonction 02 Date de dernière modification du mot de passe
+function LastPasswordChangeDate {
+    $lastPasswdChange = Invoke-Command -ComputerName CLIWINP2 -Credential "WORKGROUP\jerom" -ScriptBlock {
+        $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
+        $evenement = Get-WinEvent -LogName "Security" | Where-Object { $_.Id -eq 4624 -and $_.Properties[5].Value -eq $utilisateur } | Select-Object -First 1
+        if ($utilisateur) {
+            if (Get-LocalUser | Where-Object {$_.name -eq $utilisateur}) {
+                if ($evenement) {
+                    $lastPasswdChangeDate = $evenement.TimeCreated
+                    Write-Host "La date de dernière modification du mot de passe de $utilisateur est : $lastPasswdChangeDate"
+                } else {
+                    Write-Host "L'utilisateur $utilisateur n'a pas de connexion enregistrée."
+                }
+            } else {
+                Write-Host "Cet utilisateur n'existe pas"
+            }
+        } else {
+            Write-Host "Merci de renseigner un nom d'utilisateur"
+        }
+    }
+    $lastPasswdChange
+}
+
+#-----------------------fonction 03 Groupe d’appartenance d’un utilisateur
+function UserGroup {
+    $UserGroup = Invoke-Command -ComputerName CLIWINP2 -Credential "WORKGROUP\jerom" -ScriptBlock { whoami /groups }
+    $UserGroup
+}
+
+#----------------------fonction 04 Droits/permissions de l’utilisateur
+function UserPermissions {
+    $UserPermissions = Invoke-Command -ComputerName CLIWINP2 -Credential "WORKGROUP\jerom" -ScriptBlock { whoami /priv }
+    $UserPermissions
+}
+#---------------------------------fonction menu informations ordinateur
+#---------------------------------01 fonction OS---------------------------------------------
+function OsVersion {
+    $osInfo = Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version
+    Write-Host $osinfo 
+}
+
+#--------------------------------02 fonction espace disque------------------------------
+function diskSpace {
+    Invoke-Command -ComputerName CLIWINP2 -Credential "WORGROUP\jerom" -ScriptBlock {
+        $FreeDiskSpaceCommand = Get-CimInstance -ClassName Win32_LogicalDisk | Where-Object { $_.DeviceID -eq "C:" }
+        $FreeSpaceBytes = $FreeDiskSpaceCommand.FreeSpace
+        $FreeSpaceGB = [math]::Round($FreeSpaceBytes / 1GB, 2)
+        "Espace disque restant sur le lecteur C: : $FreeSpaceGB Go"
+    }
+}
+
+#-----------------------------03 fonction taille de répertoire--------------------------
+function sizeOfDirectory {
+    $DirectorySize = Invoke-Command -ComputerName CLIWINP2 -Credential "WORGROUP\jerom" -ScriptBlock {
+        #Demander le chemin du répertoire à l'utilisateur
+        $cheminDuRepertoire = Read-Host "Veuillez entrer le chemin du répertoire"
+
+        if ($cheminDuRepertoire)
+        {
+            if (Test-Path $cheminDuRepertoire)
+            {
+                #Obtenir la taille du répertoire en octets
+                $tailleEnOctets = (Get-ChildItem -Recurse -File -Path $cheminDuRepertoire | Measure-Object -Property Length -Sum).Sum
+
+                #Fonction pour convertir la taille en une unité lisible par un humain
+                function ConvertirEnLisible 
+                {
+                    param(
+                        [long]$tailleEnOctets
+                    )
+
+                    if ($tailleEnOctets -ge 1GB) 
+                    {
+                        "{0:N2} Go" -f ($tailleEnOctets / 1GB)
+                    }
+                    elseif ($tailleEnOctets -ge 1MB)
+                    {
+                        "{0:N2} Mo" -f ($tailleEnOctets / 1MB)
+                    }
+                    elseif ($tailleEnOctets -ge 1KB) 
+                    {
+                        "{0:N2} Ko" -f ($tailleEnOctets / 1KB)
+                    }
+                    else
+                    {
+                        "{0:N0} octets" -f $tailleEnOctets
+                    }
+                }
+
+                #Convertir la taille en une forme lisible par un humain
+                $tailleLisible = ConvertirEnLisible -tailleEnOctets $tailleEnOctets
+
+                #Afficher la taille du répertoire de manière lisible
+                Write-Host "La taille du répertoire $cheminDuRepertoire est de $tailleLisible."
+            }
+            else
+            {
+                Write-Host "Ce chemin de répertoire n'est pas valide"
+            }
+        }
+        else
+        {
+            Write-Host "Merci de renseigner un chemin de répertoire"
+        }
+    }
+    $DirectorySize 
+}
+
+#-------------------------------------04 fonction liste des lecteurs-----------------------------------------------
+Function hardDriveList {
+    $lecteurs = Invoke-Command -ScriptBlock {
+        Get-WmiObject -Class Win32_LogicalDisk | Select-Object DeviceID, VolumeName
+    } -ComputerName CLIWINP2 -Credential "WORKGROUP\jerom"
+    $lecteurs
+}
+
+#-----------------------------------05 fonction adresses IP------------------------------------
+Function ipAdrress {
+    $adresseIP = Invoke-Command -scriptblock { Get-NetIPAddress -AddressFamily IPV4 | Select-Object "*ipa*"
+    } -computername CLIWINP2 -credential  "WORKGROUP\jerom"
+
+    $adresseIP
+}
+
+#---------------------------------06 fonction liste des adresses MAC---------------------
+
+function macaddressList {
+    $MacList =  Invoke-Command -scriptblock { Get-NetAdapter -Name * | Select-Object "MacAddress"
+    } -computername CLIWINP2 -credential  "WORKGROUP\jerom"
+
+    $MacList
+}
+
+#------------------------------------07 fonction liste des application et paquets------------------------
+
+function programList {
+    Invoke-Command -scriptblock { Get-Package
+    } -computername CLIWINP2 -credential  "WORKGROUP\jerom"
+
+}
+
+#------------------------------------08 fonction CPU------------------------------------
+function cpuType {
+    Invoke-Command -scriptblock { Get-WmiObject -Class Win32_Processor
+    } -computername CLIWINP2 -credential  "WORKGROUP\jerom"
+}
+
+#------------------------------------09 fonction RAM-------------------------------------
+function RamMemory {
+    $ram = Invoke-Command  -computername CLIWINP2 -credential "WORKGROUP\jerom" -scriptblock { ([math]::Round((Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 2))
+    }
+    Write-Host "La mémoire RAM totale est de : $ram Go"
+}
+
+#------------------------------------10 fonction Ports-------------------------------------
+function portsList {
+    $Ports = Invoke-Command -computername CLIWINP2 -credential "WORKGROUP\jerom" -scriptblock { Get-NetTCPConnection | Select-Object LocalPort
+    } 
+    $Ports | Format-Table
+}
+
+#------------------------------------11 fonction Pare-feu---------------------------------
+function FirewallStatus {
+    $Firewall = Invoke-Command -computername CLIWINP2 -credential "WORKGROUP\jerom" -scriptblock { Get-NetFirewallProfile | Select-Object Name, Enabled
+    }
+    $Firewall
+}
+
+#------------------------------------12 fonction utilisateurs locaux---------------------------------
+function localUsersList {
+    $LocalUsers = Invoke-Command -ComputerName CLIWINP2 -Credential "WORKGROUP\jerom" -ScriptBlock { Get-WmiObject -Class Win32_UserAccount | Select-Object Name, Fullname, SID
+    }
+    $LocalUsers
+}
+
+# Fonction pour afficher le menu informations ordinateurs
+function ShowMenuInfosComp {
+    Clear-Host
+    Write-Host "Menu Informations ordinateurs"
+    Write-Host "--------------------------------"
+    Write-Host "1. Information système (OS)"
+    Write-Host "2. Espace disque"
+    Write-Host "3. Taille d'un répertoire"
+    Write-Host "4. Liste des lecteurs"
+    Write-Host "5. Adresses IP"
+    Write-Host "6. Liste des adresses MAC"
+    Write-Host "7. Liste des applications et paquets"
+    Write-Host "8. Type de CPU"
+    Write-Host "9. Mémoire RAM"
+    Write-Host "10. Liste des ports en cours d'utilisation"
+    Write-Host "11. État du pare-feu"
+    Write-Host "12. Liste des utilisateurs locaux"
+    Write-Host "13. Quitter"
+}
+
+# Fonction pour afficher le menu informations utilisateurs
+function ShowMenuInfosUser {
+    Clear-Host
+    Write-Host "Menu Informations utilisateurs"
+    Write-Host "--------------------------------"
+    Write-Host "1. Date de dernière connection utilisateur"
+    Write-Host "2. Date de dernière modification du mot de passe"
+    Write-Host "3. Groupe d’appartenance d’un utilisateur"
+    Write-Host "4. Droits/permissions de l’utilisateur"
+    Write-Host "13. Quitter"
+}
+# Boucle pour afficher le menu et recueillir l'entrée de l'utilisateur
+$selection = $null
+while ($selection -ne 13) {
+    ShowMenuInfosComp
+    $selection = Read-Host "Sélectionnez une option (1-13)"
+
+    switch ($selection) {
+        1 { 
+            OsVersion 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        2 { 
+            diskSpace 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        3 { 
+            sizeOfDirectory 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        4 { 
+            hardDriveList 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        5 { 
+            ipAdrress 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        6 { 
+            macaddressList 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        7 { 
+            programList 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        8 { 
+            cpuType 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        9 { 
+            RamMemory 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        10 { 
+            portsList 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        11 { 
+            FirewallStatus 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        12 { 
+            localUsersList 
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+        13 { Write-Host "Merci d'avoir utilisé le menu. Au revoir!" }
+        default {
+            Write-Host "Option invalide. Veuillez sélectionner une option valide (1-13)."
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+        }
+    }
+}
+# boucle pour menu informations utilisateurs
+
+while (-not $quit) {
+    ShowMenuInfosUser
+
+    $choice = Read-Host "Entrez le numéro de l'option que vous souhaitez exécuter"
+
+    switch ($choice) {
+        1 {
+            LastConnectionUser
+        }
+        2 {
+            LastPasswordChangeDate
+        }
+        3 {
+            UserGroup
+        }
+        4 {
+            UserPermissions
+        }
+        5 {
+            $quit = $true
+        }
+        default {
+            Write-Host "Option non valide. Veuillez sélectionner une option valide."
+        }
+    }
+}
