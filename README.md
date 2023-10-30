@@ -23,7 +23,7 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 |---------|---------------|------------------------------------------------------------------|
 | Thomas |               |Création d'une partie du script Linux sur les informations et recherche sur le protocole SSH plus poussée.          |
 | Vincent  | Product Owner |Garant de la qualité du produit final et représentant du client. Création d'une partie du code Linux sur les actions. Prise de contrôle en remote, amélioration continue du script PowerShell
-| Jérôme  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Création de la trame du script Windows et recherche des commandes permettant la prise de contrôle d'un ordniateru à un autre
+| Jérôme  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Création de la trame du script Windows et recherche des commandes permettant la prise de contrôle d'un ordniateur à un autre
 
 ## Semaine 3
 
@@ -31,7 +31,7 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 |:-------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | Thomas  | Scrum Master  | Garant de la progression et de l'application de la méthode scrum. Recherche et création des commandes actions sur utilisateurs et ordinateurs PowerShell et journalisation|
 | Vincent | Product Owner | Garant de la qualité du produit final et représentant du client. Création d'une partie du script PowerShell actions et menu.                                          |
-| Jérôme  |               | Recherche et création des commandes PowerShell sur les informations utilisateurs et machines, travail du script PowerShell pour améliorer intégrer des fonctions pour le menu interactif                                                                                                                                                                                              |
+| Jérôme  |               | Recherche et création des commandes PowerShell sur les informations utilisateurs et machines, travail du script PowerShell pour intégrer des fonctions pour le menu interactif                                                                                                                                                                                              |
 
 
 ## Choix Techniques
