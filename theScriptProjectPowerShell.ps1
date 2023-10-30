@@ -8,7 +8,7 @@
 #    vers different client avec des OS    # 
 #              different                  #
 # Le Projet a commencer le lundi 9 octobre#
-#       Version 1.0                       #
+#               Version 1.0               #
 ###########################################
 
 #------------------Variable------------------#
@@ -429,37 +429,49 @@ function LastConnectionUser {
     
         if ($evenement) {
             $dateDerniereConnexion = $evenement.TimeCreated
-            Write-Host "La date de la derniere connexion de $utilisateur est : $dateDerniereConnexion"
+            return "La date de la derniere connexion de $utilisateur est : $dateDerniereConnexion"
         } else {
             Write-Host "L'utilisateur $utilisateur n'a pas de connexion enregistrée."
         }
-    } >C:\Users\administrateur\Desktop\export\DerniereConnectionUtilisateur_$($cli)_$($logDate).txt
+    } > C:\Users\administrateur\Desktop\export\DerniereConnectionUtilisateur_$($cli)_$($logDate).txt
     $Lastconnection
 }
 
 #-----------------------------fonction 02 Date de dernière modification du mot de passe
 function LastPasswordChangeDate {
-    $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    $lastPasswdChange = Invoke-Command -ComputerName $cli -Credential $cred -ScriptBlock {
+    $logDate = Get-Date -Format yyyyMMdd_hhmmss 
+    New-Item -ItemType file -path C:\Users\administrateur\Desktop\export\DerniereModificationMotDePasse_$($cli)_$($logDate).txt
+    Start-Sleep -Seconds 2
+    #$lastPasswdChange = 
+    Invoke-Command -ComputerName $cli -Credential $cred -ScriptBlock {
         $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
         $evenement = Get-WinEvent -LogName "Security" | Where-Object { $_.Id -eq 4624 -and $_.Properties[5].Value -eq $utilisateur } | Select-Object -First 1
-        if ($utilisateur) {
-            if (Get-LocalUser | Where-Object {$_.name -eq $utilisateur}) {
-                if ($evenement) {
+        if ($utilisateur) 
+        {
+            if (Get-LocalUser | Where-Object {$_.name -eq $utilisateur}) 
+            {
+                if ($evenement) 
+                {
                     $lastPasswdChangeDate = $evenement.TimeCreated
-                    Write-Host "La date de derniere modification du mot de passe de $utilisateur est : $lastPasswdChangeDate"
-                } else {
+                    return "La date de derniere modification du mot de passe de $utilisateur est : $lastPasswdChangeDate" 
+                } 
+                else 
+                {
                     Write-Host "L'utilisateur $utilisateur n'a pas de connexion enregistree."
                 }
-            } else {
+            } 
+            else 
+            {
                 Write-Host "Cet utilisateur n'existe pas"
             }
-        } else {
+        }
+        else 
+        {
             Write-Host "Merci de renseigner un nom d'utilisateur"
         }
     } > C:\Users\administrateur\Desktop\export\DerniereModificationMotDePasse_$($cli)_$($logDate).txt
-    $lastPasswdChange
-}
+    
+} 
 
 #-----------------------fonction 03 Groupe d’appartenance d’un utilisateur
 function UserGroup {
@@ -478,8 +490,8 @@ function UserPermissions {
 #---------------------------------01 fonction OS---------------------------------------------
 function OsVersion {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    Invoke-Command -ComputerName $cli -Credential $cred -ScriptBlock { $osInfo = Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version
-    Write-Host $osinfo 
+    Invoke-Command -ComputerName $cli -Credential $cred -ScriptBlock { $osInfo = Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version 
+    return $osinfo 
     } > C:\Users\administrateur\Desktop\export\VersionOS_$($cli)_$($logDate).txt
 }
 
@@ -490,7 +502,7 @@ function diskSpace {
         $FreeDiskSpaceCommand = Get-CimInstance -ClassName Win32_LogicalDisk | Where-Object { $_.DeviceID -eq "C:" }
         $FreeSpaceBytes = $FreeDiskSpaceCommand.FreeSpace
         $FreeSpaceGB = [math]::Round($FreeSpaceBytes / 1GB, 2)
-        "Espace disque restant sur le lecteur C: : $FreeSpaceGB Go"
+        return "Espace disque restant sur le lecteur C: : $FreeSpaceGB Go"
     } > C:\Users\administrateur\Desktop\export\EspaceDisque_$($cli)_$($logDate).txt
 }
 
@@ -537,7 +549,7 @@ function sizeOfDirectory {
                 $tailleLisible = ConvertirEnLisible -tailleEnOctets $tailleEnOctets
 
                 #Afficher la taille du répertoire de manière lisible
-                Write-Host "La taille du répertoire $cheminDuRepertoire est de $tailleLisible."
+                return "La taille du répertoire $cheminDuRepertoire est de $tailleLisible."
             }
             else
             {
@@ -549,32 +561,34 @@ function sizeOfDirectory {
             Write-Host "Merci de renseigner un chemin de repertoire"
         }
     } > C:\Users\administrateur\Desktop\export\TailleRepertoire_$($cli)_$($logDate).txt
-    $DirectorySize 
+    
 }
 
 #-------------------------------------04 fonction liste des lecteurs-----------------------------------------------
 Function hardDriveList {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    $lecteurs = Invoke-Command -ScriptBlock {
-        Get-WmiObject -Class Win32_LogicalDisk | Select-Object DeviceID, VolumeName
+   Invoke-Command -ScriptBlock { $lecteurs = Get-WmiObject -Class Win32_LogicalDisk | Select-Object DeviceID, VolumeName
+        return $lecteurs
     } -ComputerName $cli -Credential $cred > C:\Users\administrateur\Desktop\export\ListeLecteur_$($cli)_$($logDate).txt
-    $lecteurs
+    
 }
 
 #-----------------------------------05 fonction adresses IP------------------------------------
 Function ipAdrress {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    $adresseIP = Invoke-Command -scriptblock { Get-NetIPAddress -AddressFamily IPV4 | Select-Object "*ipa*"
+    Invoke-Command -scriptblock { $adresseIP =  Get-NetIPAddress -AddressFamily IPV4 | Select-Object "*ipa*"
+    return $adresseIP
     } -computername $cli -credential $cred > C:\Users\administrateur\Desktop\export\AdresseIP_$($cli)_$($logDate).txt
 
-    $adresseIP
+    
 }
 
 #---------------------------------06 fonction liste des adresses MAC---------------------
 
 function macaddressList {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    $MacList =  Invoke-Command -scriptblock { Get-NetAdapter -Name * | Select-Object "MacAddress"
+    Invoke-Command -scriptblock { $MacList = Get-NetAdapter -Name * | Select-Object "MacAddress"
+    return $MacList
     } -computername $cli -credential $cred > C:\Users\administrateur\Desktop\export\AdresseMAC_$($cli)_$($logDate).txt
 
     $MacList
@@ -584,99 +598,140 @@ function macaddressList {
 
 function programList {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    Invoke-Command -scriptblock { Get-Package
+    Invoke-Command -scriptblock { $PaquetsList = Get-Package
+    return $PaquetsList
     } -computername $cli -credential $cred  > C:\Users\administrateur\Desktop\export\ApplicationPaquet_$($cli)_$($logDate).txt
 }
 
 #------------------------------------08 fonction CPU------------------------------------
 function cpuType {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    Invoke-Command -scriptblock { Get-WmiObject -Class Win32_Processor
+    Invoke-Command -scriptblock { $CPUtype = Get-WmiObject -Class Win32_Processor
+    return $CPUtype
     } -computername $cli -credential $cred  > C:\Users\administrateur\Desktop\export\InfoCPU_$($cli)_$($logDate).txt
 }
 
 #------------------------------------09 fonction RAM-------------------------------------
 function RamMemory {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    $ram = Invoke-Command  -computername $cli -credential $cred -scriptblock { ([math]::Round((Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 2))
+    Invoke-Command  -computername $cli -credential $cred -scriptblock { $ram = ([math]::Round((Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 2))
+    return "$ram Go"
     } > C:\Users\administrateur\Desktop\export\InfoRAM_$($cli)_$($logDate).txt
-    #Write-Host "La memoire RAM totale est de : $ram Go"
 }
 
 #------------------------------------10 fonction Ports-------------------------------------
 function portsList {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    $Ports = Invoke-Command -computername $cli -credential $cred -scriptblock { Get-NetTCPConnection | Select-Object LocalPort
+    $Ports = Invoke-Command -computername $cli -credential $cred -scriptblock { $Ports = Get-NetTCPConnection | Select-Object LocalPort
+    return $Ports | Format-Table
     } > C:\Users\administrateur\Desktop\export\InfoPort_$($cli)_$($logDate).txt 
-    $Ports | Format-Table
 }
 
 #------------------------------------11 fonction Pare-feu---------------------------------
 function FirewallStatus {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    $Firewall = Invoke-Command -computername $cli -credential $cred -scriptblock { Get-NetFirewallProfile | Select-Object Name, Enabled
-    } > C:\Users\administrateur\Desktop\export\StatutParefeu_$($cli)_$($logDate).txt 
-    $Firewall
+    Invoke-Command -computername $cli -credential $cred -scriptblock { $Firewall = Get-NetFirewallProfile | Select-Object Name, Enabled
+    
+    return $Firewall} > C:\Users\administrateur\Desktop\export\StatutParefeu_$($cli)_$($logDate).txt     
 }
 
 #------------------------------------12 fonction utilisateurs locaux---------------------------------
 function localUsersList {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
-    $LocalUsers = Invoke-Command -ComputerName $cli -Credential $cred -ScriptBlock { Get-WmiObject -Class Win32_UserAccount | Select-Object Name, Fullname, SID
-    } > C:\Users\administrateur\Desktop\export\UtilisateurLocaux_$($cli)_$($logDate).txt 
-    $LocalUsers
+    Invoke-Command -ComputerName $cli -Credential $cred -ScriptBlock { $LocalUsers =  Get-WmiObject -Class Win32_UserAccount | Select-Object Name, Fullname, SID
+    return $LocalUsers} > C:\Users\administrateur\Desktop\export\UtilisateurLocaux_$($cli)_$($logDate).txt 
 }
-# fonction pour afficher le menu principal
+#-----------------Menu Principale----------------#
 
-function ShowMainMenu {
-    Clear-Host
-    Write-Host "1. Voulez vous effectuer une Action ?"
-    Write-Host "2. Voulez-vous recolter une Information ?"
-}
-# fonction pour afficher le menu actions
-function ShowActionsMenu {
-    Write-Host "1. Voulez-vous agir sur les utilisateurs ?"
-    Write-Host "2. Voulez-vous agir sur les machines ?"
-    Write-Host "3. Retour au menu principal"
-}
-# fonction pour afficher le menu actions utilisateurs
-function ShowActionsUsersMenu {
-Write-Host "1. Voulez-vous ajouter un Utilisateur ?"
-Write-Host "2. Voulez-vous renommer un Utilisateur ?"
-Write-Host "3. Voulez-vous supprimer un Utilisateur ?"
-Write-Host "4. Voulez-vous suspendre un Utilisateur ?"
-Write-Host "5. Voulez-vous changer le mot de passe d'un Utilisateur ?"
-Write-Host "6. Voulez-vous ajouter l'utilisateur Ã  un groupe ?"
-Write-Host "7. Voulez-vous retirer l'utilisateur Ã  un groupe ?"
-}
-
-# # fonction pour afficher le menu actions ordinateurs
-function ShowActionsComputersMenu {
-Write-Host "1. Voulez-vous arreter la machine ?"
-Write-Host "2. Voulez-vous redemarrer la machine ?"
-Write-Host "3. Voulez-vous demarrer la machine grace au wake-on-lan ?"
-Write-Host "4. Voulez-vous mettre a jour le systeme ?"
-Write-Host "5. Voulez-vous verrouiller la session ?"
-Write-Host "6. Voulez-vous creer un repertoire ?"
-Write-Host "7. Voulez-vous modifier un repertoire ?"
-Write-Host "8. Voulez-vous supprimer un repertoire ?"
-Write-Host "9. Voulez-vous prendre en main le client ?"
-Write-Host "10. Voulez-vous definir les regles du pare-feu?"
-}
-
-# Fonction pour afficher le menu informations
-function ShowInfoMenu {
-    Clear-Host
-    Write-Host "Menu informations"
-    Write-Host "--------------------------------"
-    Write-Host "1. Informations ordinateurs"
-    Write-Host "2. Informations utilisateurs"
-    Write-Host "3. Retour au menu principal"
-    Write-Host "4. Quitter"
+function MenuPrincipal
+{
+Clear-Host
+    $selection = $null
+    while ($selection -ne 4)
+    { 
+    Clear-host 
+        Write-Host "Menu Principal"
+        Write-Host "--------------------------------"
+        Write-Host "1. Voulez-vous recolter une information ?"
+        Write-Host "2. Voulez-vous effetuer une action ?"
+        Write-Host "3. Quitter"
+        $choice = Read-Host "Sélectionnez une option (1-3)"
+        switch ($choice)
+        {
+        1
+            {
+            MenuInfo
+            }
+        2
+            {
+            MenuAction
+            }
+        3 
+            {
+            Write-Host "See you!"
+            exit
+            }        
+        default 
+            {
+            Write-Host "Option invalide. Veuillez sélectionner une option valide (1-3)."
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        }
+    }
 }
 
-# Fonction pour afficher le menu informations utilisateurs
-function ShowMenuInfosUser {
+#-----------------Menu Informations ----------------#
+
+function MenuInfo
+{
+Clear-Host
+    $selection = $null
+    while ($selection -ne 4)
+    { 
+    Clear-host 
+        Write-Host "Menu Information"
+        Write-Host "--------------------------------"
+        Write-Host "1. Voulez-vous recolter une information sur l'utilisateur ?"
+        Write-Host "2. Voulez-vous recolter une information sur la machine ?"
+        Write-Host "3. Retour au menu precedent"
+        Write-Host "4. Quitter"
+        $choice = Read-Host "Sélectionnez une option (1-4)"
+        switch ($choice)
+        {
+        1
+            {
+            MenuInfosUser
+            }
+        2
+            {
+            MenuInfoComp
+            }
+        3 
+            {
+            MenuPrincipal
+            }
+        4
+            {
+            Write-Host "See you!"
+            exit
+            }
+        default 
+            {
+            Write-Host "Option invalide. Veuillez sélectionner une option valide (1-4)."
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        }
+    }
+}
+
+#-----------------Menu Information Utilisateur----------------#
+
+function MenuInfosUser 
+{
+Clear-Host
+    $selection = $null
+    while ($selection -ne 6)
+    { 
     Clear-Host
     Write-Host "Menu Informations utilisateurs"
     Write-Host "--------------------------------"
@@ -684,10 +739,58 @@ function ShowMenuInfosUser {
     Write-Host "2. Date de derniere modification du mot de passe"
     Write-Host "3. Groupe d'appartenance d'un utilisateur"
     Write-Host "4. Droits/permissions de l'utilisateur"
-    Write-Host "13. Quitter"
+    Write-Host "5. Retour au menu précedent"
+    Write-Host "6. Quitter"
+    $choice = Read-Host "Entrez le numéro de l'option que vous souhaitez exécuter"
+        # Menu d'informations sur les utilisateurs                                                        
+            switch ($choice) 
+            {
+                1 
+                    {
+                    LastConnectionUser                   
+                    Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                    }
+                2 
+                    {
+                    LastPasswordChangeDate
+                    Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                    }
+                3 
+                    {
+                    UserGroup
+                    Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                    }
+                4 
+                    {
+                    UserPermissions
+                    Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                    }
+                5
+                    {
+                    MenuInfo                    
+                    }
+                6 
+                    {
+                    Write-Host "See you!"
+                    exit
+                    }
+                default 
+                    {
+                    Write-Host "Option invalide. Veuillez sélectionner une option valide (1-6)."
+                    Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                    }
+            }
+    }
 }
-# Fonction pour afficher le menu informations ordinateurs
-function ShowMenuInfosComp {
+
+#-----------------Menu Information Machine----------------#
+
+function MenuInfoComp 
+{
+Clear-Host
+    $selection = $null
+    while ($selection -ne 14)
+    { 
     Clear-Host
     Write-Host "Menu Informations ordinateurs"
     Write-Host "--------------------------------"
@@ -703,317 +806,311 @@ function ShowMenuInfosComp {
     Write-Host "10. Liste des ports en cours d'utilisation"
     Write-Host "11. État du pare-feu"
     Write-Host "12. Liste des utilisateurs locaux"
-    Write-host "13. Retour au menu prinipal"
+    Write-host "13. Retour au menu precedent"
     Write-Host "14. Quitter"
-}
-#fonction pour retourner au menu
-function ReturnToMainMenu 
-{
-    Clear-Host
-    $choice = $null
-    ShowMainMenu
-    $choice = Read-Host "Choisissez une option (1/2, Q pour quitter)"
-}
-
-# Boucle principale pour afficher le menu et recueillir l'entrée de l'utilisateur
-$quit = $false
-while (-not $quit) 
-{
-    ShowMainMenu
-    $choice = Read-Host "Choisissez une option (1/2, Q pour quitter)"
-
+    $choice = Read-Host "Sélectionnez une option (1-14)"
     switch ($choice) 
-    {
-        "1" 
         {
-            # Afficher le menu des actions
-            ShowActionsMenu
-            $actionChoice = Read-Host "Choisissez une action (1/2)"
-            switch ($actionChoice) 
+            1 
+                { 
+                OsVersion 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            2 
+                { 
+                diskSpace 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            3
+                { 
+                sizeOfDirectory 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            4
+                { 
+                hardDriveList 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            5
+                { 
+                ipAdrress 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            6
+                { 
+                macaddressList 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            7  
+                { 
+                programList 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            8 
+                { 
+                cpuType 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            9 
+                { 
+                RamMemory 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            10
+                { 
+                portsList 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            11 
+                { 
+                FirewallStatus 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            12 
+                { 
+                localUsersList 
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            13 
+                {
+                MenuInfo 
+                }
+            14 
+                {
+                Write-Host "See you!"
+                exit
+                }
+            default 
+                {
+                Write-Host "Option invalide. Veuillez sélectionner une option valide (1-14)."
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+        }
+    }
+}
+
+#-----------------Menu Action----------------#
+
+function MenuAction
+{
+Clear-Host
+    $selection = $null
+    while ($selection -ne 4)
+    { 
+    Clear-host 
+        Write-Host "Menu Action"
+        Write-Host "--------------------------------"
+        Write-Host "1. Voulez-vous effetuer une action sur l'utilisateur ?"
+        Write-Host "2. Voulez-vous effetuer une action sur la machine ?"
+        Write-Host "3. Retour au menu precedent"
+        Write-Host "4. Quitter"
+        $choice = Read-Host "Sélectionnez une option (1-4)"
+        switch ($choice)
+        {
+        1
             {
-                "1" 
-                {
-                    # Afficher le menu des actions sur les utilisateurs
-                    while (-not $quit) 
-                    {
-                    ShowActionsUsersMenu
-                    $userActionChoice = Read-Host "Choisissez une action sur les utilisateurs (1-7)"
-                    switch ($userActionChoice)
-                                        {
-                                        1
-                                          {
-                                            newUser
-                                          }
-                                        2
-                                          {
-                                            renameUser
-                                          }
-                                        3
-                                          {
-                                            delUser
-                                          }
-                                        4
-                                          {
-                                            disableUser
-                                          }
-                                        5
-                                          {
-                                            changePassword
-                                          }
-                                        6
-                                          {
-                                            addToGroup 
-                                          }
-                                        7
-                                          {
-                                            removeFromGroup
-                                          }
-                                        default
-                                          {
-                                            Write-Host "Choisir entre 1 et 7"
-                                          }
-
-                                        }
-                     }
-                 }
-                "2" 
-                {
-                    while (-not $quit) 
-                    {
-                    # Afficher le menu des actions sur les ordinateurs
-                    ShowActionsComputersMenu
-                    $compActionChoice = Read-Host "Choisissez une action sur les ordinateurs (1-10)"
-                    switch ($compActionChoice)
-                        {
-                            1
-                                {
-                                Stop-Computer -ComputerName $cli -Credential $cred -force
-
-                                #Format de la date pour Journalisation
-                                $LogDate = Get-Date -Format yyyyMMdd_hhmmss 
-
-                                #Chemin pour la Journalisation
-                                $LogPath = "C:\Windows\System32\LogFiles\log_actions.log"
-
-                                "Ordinateur client éteint le $($LogDate)" | Out-File -Append -FilePath $($LogPath)
-                                }
-                            2
-                                {
-                                Restart-Computer -ComputerName $cli -Credential $cred -force
-
-                                #Format de la date pour Journalisation
-                                $LogDate = Get-Date -Format yyyyMMdd_hhmmss 
-
-                                #Chemin pour la Journalisation
-                                $LogPath = "C:\Windows\System32\LogFiles\log_actions.log"
-
-                                "Ordinateur client redémarré le $($LogDate)" | Out-File -Append -FilePath $($LogPath)
-                                }
-                            3
-                                {
-                                Write-Host "Non executable a ce stade de la formation"
-                                }
-                            4
-                                {
-                                Write-Host "Non executable a ce stade de la formation"
-                                }
-                            5
-                                {
-                                lockedComputer
-                                }
-                            6
-                                {
-                                newDir
-                                }
-                            7
-                                {
-                                renameDir
-                                }
-                            8
-                                {
-                                delDir
-                                }
-                            9
-                                {
-                                remoteControl
-                                }
-                            10
-                                {
-                                Write-Host "Non executable a ce stade de la formation"
-                                }
-                            default
-                                {
-                                Write-Host "Choisir entre 1 et 10"
-                                }
-
-                        }
-                    }      
-                }
-                "3"    
-                    {
-                    ReturnToMainMenu
-                    }
-                default 
-                {
-                Write-Host "Option invalide."
-                }
+            MenuActUser
+            }
+        2
+            {
+            MenuActCompt
+            }
+        3 
+            {
+            MenuPrincipal
+            }
+        4
+            {
+            Write-Host "See you!"
+            exit
+            }
+        default 
+            {
+            Write-Host "Option invalide. Veuillez sélectionner une option valide (1-4)."
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
             }
         }
-        "2" 
+    }
+}
+
+#-----------------Menu Action Utilisateur----------------#
+
+function MenuActUser 
+{
+Clear-Host
+    $selection = $null
+    while ($selection -ne 9)
+    {
+        Clear-host 
+        Write-Host "Menu Action Utilisateurs"
+        Write-Host "--------------------------------"
+        Write-Host "1. Voulez-vous ajouter un Utilisateur ?"
+        Write-Host "2. Voulez-vous renommer un Utilisateur ?"
+        Write-Host "3. Voulez-vous supprimer un Utilisateur ?"
+        Write-Host "4. Voulez-vous suspendre un Utilisateur ?"
+        Write-Host "5. Voulez-vous changer le mot de passe d'un Utilisateur ?"
+        Write-Host "6. Voulez-vous ajouter l'utilisateur a un groupe ?"
+        Write-Host "7. Voulez-vous retirer l'utilisateur a un groupe ?"
+        Write-Host "8. Retour au menu precedent"
+        Write-Host "9. Quitter"
+        $choice = Read-Host "Sélectionnez une option (1-9)"
+        switch ($choice)
         {
-            # Afficher le menu des informations
-            while (-not $quit) 
-            {
-            ShowInfoMenu
-                $choice = Read-Host "Sélectionnez une option (1-4)"
-            
-                switch ($choice) 
+            1
                 {
-                    1 
-                    {
-                        $selection = $null
-                    while ($selection -ne 14) 
-                    {
-                        ShowMenuInfosComp
-                        $selection = Read-Host "Sélectionnez une option (1-14)"
-                        switch ($selection) 
-                        {
-                            1 
-                            { 
-                            OsVersion 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            2 
-                            { 
-                            diskSpace 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            3
-                            { 
-                            sizeOfDirectory 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            4
-                            { 
-                            hardDriveList 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            5
-                            { 
-                            ipAdrress 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            6
-                            { 
-                            macaddressList 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            7  
-                            { 
-                            programList 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            8 
-                            { 
-                            cpuType 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            9 
-                            { 
-                            RamMemory 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            10
-                            { 
-                            portsList 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            11 
-                            { 
-                            FirewallStatus 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            12 
-                            { 
-                            localUsersList 
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                            13 
-                            {
-                            ReturnToMainMenu
-                            }
-                            14 
-                            {
-                            Write-Host "See you!" 
-                            }
-                            default 
-                            {
-                            Write-Host "Option invalide. Veuillez sélectionner une option valide (1-14)."
-                            Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                            }
-                        }
-                    }
+                newUser
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
                 }
-                    2 
-                    {
-                        # Menu d'informations sur les utilisateurs
-                        while (-not $quit) 
-                        {
-                            ShowMenuInfosUser
-                        
-                            $choice = Read-Host "Entrez le numéro de l'option que vous souhaitez exécuter"
-                        
-                            switch ($choice) 
-                            {
-                                1 
-                                {
-                                LastConnectionUser
-                                Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                                }
-                                2 
-                                {
-                                LastPasswordChangeDate
-                                Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                                }
-                                3 
-                                {
-                                UserGroup
-                                Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                                }
-                                4 
-                                {
-                                UserPermissions
-                                Read-Host "Appuyez sur Entrée pour revenir au menu..."
-                                }
-                                5 
-                                {
-                                $quit = $true
-                                }
-                                default 
-                                {
-                                Write-Host "Option non valide. Veuillez sélectionner une option valide."
-                                }
-                            }
-                        }
-                    }
-                    3 
-                    {
-                    ReturnToMainMenu
-                    }
-                    
-                    4
-                    { 
-                    $quit = $true
-                    Write-Host "Merci d'avoir utilisé le menu. Au revoir!"
-                    }
-                    default 
-                    {
-                    Write-Host "Option invalide. Veuillez sélectionner une option valide (1-3)."
-                    Read-Host "Appuyez sur Entrée pour continuer..."
-                    }
+            2
+                {
+                renameUser
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
                 }
+            3
+                {
+                delUser
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            4
+                {
+                disableUser
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            5
+                {
+                changePassword
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            6
+                {
+                addToGroup
+                Read-Host "Appuyez sur Entrée pour revenir au menu..." 
+                }
+            7
+                {
+                removeFromGroup
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+            8
+                {
+                MenuAction
+                }
+            9
+                {
+                Write-Host "See you!"
+                exit
+                }
+            default
+                {
+                Write-Host "Option invalide. Veuillez sélectionner une option valide (1-9)"
+                Read-Host "Appuyez sur Entrée pour revenir au menu..."
+                }
+        }
+    }
+}
+
+#-----------------Menu Action Machine----------------#
+
+function MenuActCompt 
+{
+Clear-Host
+    $selection = $null
+    while ($selection -ne 12)
+    {
+        Clear-host 
+        Write-Host "Menu Action Machine"
+        Write-Host "--------------------------------"
+        Write-Host "1. Voulez-vous arreter la machine ?"
+        Write-Host "2. Voulez-vous redemarrer la machine ?"
+        Write-Host "3. Voulez-vous demarrer la machine grace au wake-on-lan ?"
+        Write-Host "4. Voulez-vous mettre a jour le systeme ?"
+        Write-Host "5. Voulez-vous verrouiller la session ?"
+        Write-Host "6. Voulez-vous creer un repertoire ?"
+        Write-Host "7. Voulez-vous modifier un repertoire ?"
+        Write-Host "8. Voulez-vous supprimer un repertoire ?"
+        Write-Host "9. Voulez-vous prendre en main le client ?"
+        Write-Host "10. Voulez-vous definir les regles du pare-feu?"
+        Write-Host "11. Retour au menu precedent"
+        Write-Host "12. Quitter"
+        $choice = Read-Host "Sélectionnez une option (1-12)"
+        switch ($choice)
+        {
+        1
+            {
+            Stop-Computer -ComputerName $cli -Credential $cred -force
+
+            #Format de la date pour Journalisation
+            $LogDate = Get-Date -Format yyyyMMdd_hhmmss 
+            "Ordinateur client éteint le $($LogDate)" | Out-File -Append -FilePath C:\Windows\System32\LogFiles\$($LogDate)-Administrateur-$cli-ShutdownClient.log
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        2
+            {
+            Restart-Computer -ComputerName $cli -Credential $cred -force
+
+            #Format de la date pour Journalisation
+            $LogDate = Get-Date -Format yyyyMMdd_hhmmss 
+            "Ordinateur client redémarré le $($LogDate)" | Out-File -Append -FilePath C:\Windows\System32\LogFiles\$($LogDate)-Administrateur-$cli-RebootClient.log
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        3
+            {
+            Write-Host "Non executable a ce stade de la formation"
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        4
+            {
+            Write-Host "Non executable a ce stade de la formation"
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        5
+            {
+            lockedComputer
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        6
+            {
+            newDir
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        7
+            {
+            renameDir
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        8
+            {
+            delDir
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        9
+            {
+            remoteControl
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        10
+            {
+            Write-Host "Non executable a ce stade de la formation"
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
+            }
+        11
+            {
+            MenuAction
+            }
+        12
+            {
+            Write-Host "See you!"
+            exit
+            }
+        default
+            {
+            Write-Host "Option invalide. Veuillez sélectionner une option valide (1-12)"
+            Read-Host "Appuyez sur Entrée pour revenir au menu..."
             }
             
         }
     }
 }
+#-------------------------------MAIN---------------------------------#
+
+MenuPrincipal
