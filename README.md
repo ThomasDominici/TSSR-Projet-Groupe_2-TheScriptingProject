@@ -129,7 +129,7 @@ Cette commande semble fonctionner sur des scripts simples mais pas sur notre scr
 
 WINDOWS 
 
-pour avoir WINRM fonctionnel un nombre re prérequis sont à suivre (détaillés dans le fichier install.md)
+Afin de bénéficier de WINRM un nombre de prérequis sont à suivre (détaillés dans le fichier install.md)
 - activer winrm (procédure à suivre pour script fonctionnel)
 - configurer le bureau à distance : définir les utilisateurs de confiance qui peuvent prendre la main à distance
 - modifier la base de registre :**LocalAccountTokenFilterPolicy**
