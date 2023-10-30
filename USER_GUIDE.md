@@ -95,6 +95,7 @@ On l'affiche de la manière suivante :
 ssh user@ip "instructions"
 ```
 
+Pour l'export de données, il vous faudra créer au préalable le dossier **export** dans /home/utilisateur.
 
 #### Sous Windows : 
 
