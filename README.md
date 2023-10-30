@@ -29,9 +29,9 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 
 |   NOM   |     Roles     |                                                                                             Tâches                                                                                             |
 |:-------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Thomas  | Scrum Master  | Garant de la progression et de l'application de la méthode scrum. Recherche et création des commandes actions sur utilisateurs et ordinateurs PowerShell et journalisation|
+| Thomas  |   | Garant de la progression et de l'application de la méthode scrum. Recherche et création des commandes actions sur utilisateurs et ordinateurs PowerShell et journalisation|
 | Vincent | Product Owner | Garant de la qualité du produit final et représentant du client. Création d'une partie du script PowerShell actions et menu.                                          |
-| Jérôme  |               | Recherche et création des commandes PowerShell sur les informations utilisateurs et machines, reprise du travail du script PowerShell pour améliorer le menu interactif                                                                                                                                                                                              |
+| Jérôme  |   Scrum Master            | Recherche et création des commandes PowerShell sur les informations utilisateurs et machines, reprise du travail du script PowerShell pour améliorer le menu interactif                                                                                                                                                                                              |
 
 
 ## Choix Techniques
