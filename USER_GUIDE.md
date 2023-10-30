@@ -89,7 +89,7 @@ Voici l'ensemble des fonctionnalités que vous retrouverez dans ces scripts :
 
 #### Sous Linux : 
 
-Sous Bash, nous allons utiliser ici un tunnel SSH. Cette commande nous permet de prendre le contrôle d'un ordinateur distant dont on connapit le nom d'utilisateur et l'adresse IP.
+Sous Bash, nous allons utiliser ici un tunnel SSH. Cette commande nous permet de prendre le contrôle d'un ordinateur distant dont nous connaissons le nom d'utilisateur et l'adresse IP.
 On l'affiche de la manière suivante : 
 ```Bash
 ssh user@ip "instructions"
