@@ -22,7 +22,7 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 | NOM     | Roles         | Tâches                                                     |
 |---------|---------------|------------------------------------------------------------------|
 | Thomas |               |Création d'une partie du script Linux sur les informations et recherche sur le protocole SSH plus poussée.          |
-| Vincent  | Product Owner |Garant de la qualité du produit final et représentant du client. Création d'une partie du code Linux sur les actions. Prise de contrôle en remote
+| Vincent  | Product Owner |Garant de la qualité du produit final et représentant du client. Création d'une partie du code Linux sur les actions. Prise de contrôle en remote, amélioration continue du script PowerShell
 | Jérôme  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Création de la trame du script Windows et recherche des commandes permettant la prise de contrôle d'un ordniateru à un autre
 
 ## Semaine 3
