@@ -25,6 +25,15 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 | Vincent  | Product Owner |Garant de la qualité du produit final et représentant du client. Création d'une partie du code Linux sur les actions. Prise de contrôle en remote
 | Jérôme  | Scrum Master  |Garant de la progression et de l'application de la méthode scrum. Création de la trame du script Windows et recherche des commandes permettant la prise de contrôle d'un ordniateru à un autre
 
+## Semaine 3
+
+|   NOM   |     Roles     |                                                                                             Tâches                                                                                             |
+|:-------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Thomas  | Scrum Master  | Garant de la progression et de l'application de la méthode scrum. Recherche et création des commandes actions sur utilisateurs et ordinateurs PowerShell et journalisation|
+| Vincent | Product Owner | Garant de la qualité du produit final et représentant du client. Création d'une partie du script PowerShell actions et menu.                                          |
+| Jérôme  |               | Recherche et création des commandes PowerShell sur les informations utilisateurs et machines, reprise du travail du script PowerShell pour améliorer le menu interactif                                                                                                                                                                                              |
+
+
 ## Choix Techniques
 1) Paramétrage identique pour l'ensemble de l'équipe
 
@@ -38,6 +47,8 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 2) Priorité de réaliser un premier script en bash
 3) Trouver l'ensemble des fonctions Bash et Powershell pour les actions à réaliser sur les machines et les utilisateurs. 
 4) installer SSH et le configurer sur chaque machine.
+5) installer SSH et le configurer sur chaque machine dans l'environnement Linux.
+6) installer et configurer Winrm pour l'environnement Windows et aussi accès au bureau à distance
 
 ### Deux scripts : 
 1) Un script en Bash depuis le serveur Debian.
