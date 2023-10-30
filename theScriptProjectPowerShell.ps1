@@ -8,7 +8,7 @@
 #    vers different client avec des OS    # 
 #              different                  #
 # Le Projet a commencer le lundi 9 octobre#
-#               Version 1.0               #
+#       Version 1.0                       #
 ###########################################
 
 #------------------Variable------------------#
@@ -439,10 +439,7 @@ function LastConnectionUser {
 
 #-----------------------------fonction 02 Date de dernière modification du mot de passe
 function LastPasswordChangeDate {
-    $logDate = Get-Date -Format yyyyMMdd_hhmmss 
-    New-Item -ItemType file -path C:\Users\administrateur\Desktop\export\DerniereModificationMotDePasse_$($cli)_$($logDate).txt
-    Start-Sleep -Seconds 2
-    #$lastPasswdChange = 
+    $logDate = Get-Date -Format yyyyMMdd_hhmmss  
     Invoke-Command -ComputerName $cli -Credential $cred -ScriptBlock {
         $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
         $evenement = Get-WinEvent -LogName "Security" | Where-Object { $_.Id -eq 4624 -and $_.Properties[5].Value -eq $utilisateur } | Select-Object -First 1
