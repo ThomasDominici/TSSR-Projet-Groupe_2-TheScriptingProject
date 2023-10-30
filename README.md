@@ -29,9 +29,9 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 
 |   NOM   |     Roles     |                                                                                             Tâches                                                                                             |
 |:-------:|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Thomas  |   | Garant de la progression et de l'application de la méthode scrum. Recherche et création des commandes actions sur utilisateurs et ordinateurs PowerShell et journalisation|
+| Thomas  | Scrum Master  | Garant de la progression et de l'application de la méthode scrum. Recherche et création des commandes actions sur utilisateurs et ordinateurs PowerShell et journalisation|
 | Vincent | Product Owner | Garant de la qualité du produit final et représentant du client. Création d'une partie du script PowerShell actions et menu.                                          |
-| Jérôme  |   Scrum Master            | Recherche et création des commandes PowerShell sur les informations utilisateurs et machines, reprise du travail du script PowerShell pour améliorer le menu interactif                                                                                                                                                                                              |
+| Jérôme  |               | Recherche et création des commandes PowerShell sur les informations utilisateurs et machines, reprise du travail du script PowerShell pour améliorer le menu interactif                                                                                                                                                                                              |
 
 
 ## Choix Techniques
@@ -48,7 +48,7 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 3) Trouver l'ensemble des fonctions Bash et Powershell pour les actions à réaliser sur les machines et les utilisateurs. 
 4) installer SSH et le configurer sur chaque machine.
 5) installer SSH et le configurer sur chaque machine dans l'environnement Linux.
-6) installer et configurer Winrm pour l'environnement Windows et aussi accès au bureau à distance
+6) installer et configurer Winrm pour l'environnement Windows et ainsi que l'application au bureau à distance.
 
 ### Deux scripts : 
 1) Un script en Bash depuis le serveur Debian.
@@ -65,11 +65,27 @@ Le projet consiste à créer un script pouvant être utilisé sur Linux ou Windo
 
 Les commandes permettant des actions sur un OS ne sont pas forcément les mêmes sur un autre.
 
-3- Nous avons rencontré des difficultés à exécuter plusieurs commandes dans un tunnel SSH. 
+<u>Nous avons reporté les éléments suivants :
+- Wake on lan : virtulabox que nous utilisons ne supporte le Wake on lan, c'est un protocole qui passe par les adresses MAC et donc physique de la carte Ethernet.
+- définitions des règles de Pare feu : non étudier à ce jour car les test réalisés sont pour l'instant avec les pare-feu désactivés, à implémenter dans les prochaines semaines pour sécuriser le réseau.
+- Mise à jour du système Windows 10 par le serveur Windows 2022 nécessitant Windows Server Update Services non testé à ce jour.
 
-4- La prise de contrôle à distance en PowerShell est encore énigmatique, nous avons du mal à prendre le contrôle de la machine Windows 10 depuis la machine Windows Server.
+LINUX
+
+Nous avons rencontré des difficultés à exécuter plusieurs commandes dans un tunnel SSH. Le paramétrage a nécessité une attention toute particulière pour parvenir à faire fonctionner ce protocole.
+
+WINDOWS
+
+La prise de contrôle à distance via WINRM a été délicate à mettre en place, un ensemble de prérequis a été nécessaire dans la configuration de nos machines.
+
+COORDINATION DU PROJET
+
+Notre méthode de travail n'a pas été aussi efficace que souhaité au sein de l'équipe. Nous avons modifié notre approche en troisième semaine : 
+travailler en simultané avec à la clé des résultats positifs.
 
 ## Les solutions
+
+LINUX
 
 1- Pour fixer notre IP sur Débian, nous allons éditer en root notre interface : 
 ```Bash
@@ -95,7 +111,7 @@ iface enp0s8 inet dhcp
 ```Bash
 ssh wilder@192.168.1.x
 ```
-On rentre le mot de passe de la machine cible et pouvons la contrôler depuis le poste émetteur.
+Nous rentrons le mot de passe de la machine cible et pouvons la contrôler depuis le poste émetteur.
 
 3- Nous pouvons remettre la commande SSH devant chaque commande. Cela implique de devoir retaper le code de la machine cible avant chaque résultat. Il existe une autre solution en passant par un autre script et en effectuant la commande 
 ```Bash
@@ -109,16 +125,26 @@ ipAddress=$ipAddress
 
 ssh $user@$ipAddress 'bash -s' < <nomDuScriptALancer.sh>
 ```
-
 Cette commande semble fonctionner sur des scripts simples mais pas sur notre script cible pour le moment.
+
+WINDOWS 
+
+pour avoir WINRM fonctionnel un nombre re prérequis sont à suivre (détaillés dans le fichier install.md)
+- activer winrm (procédure à suivre pour script fonctionnel)
+- configurer le bureau à distance : définir les utilisateurs de confiance qui peuvent prendre la main à distance
+- modifier la base de registre :**LocalAccountTokenFilterPolicy**
+- activer fonctionnalité de windows "Gestion à distance"  sur le client
 
 ## Les tests réalisés
 
 Nous avons testé la méthode SSH d'un Débian à un Ubuntu.  
 Nous avons créé un script Linux complet en local et rajouté les commandes SSH pour chaque information demandée.   
-Nous avons cherché et testé différentes méthodes de prise de contrôle remote entre deux machines Windows.  
+
+Nous avons cherché et testé différentes méthodes de prise de contrôle remote entre deux machines Windows :
+WInRM a été mis en place et pleinement fonctionnel.
 
 ## Futures améliorations
 
-Nous devons continuer de chercher les commandes et tester le tunnel SSH sur les autres machines. Nous utiliserons peut-être PuTTY pour Windows.  
-Nous allons résoudre les problèmes de SSH sur le script Bash et prendre aussi le contrôle de notre machine Windows 10 avec le serveur Windows.  
+les prochaines étapes sont :
+- tester et paramétrer le croisement d'OS 
+- implanter les commandes manquantes (WOL, MAJ windows, Pare-feu)
