@@ -26,8 +26,8 @@ Ces deux scripts ont les mêmes fonctionnalités :
 - Récupération des informations du PC client depuis le PC pc serveur avec un export de ces informations.  
   - Les informations qui seront demandées seront automatiquement exportées dans un fichier d’information nommé info_Cible_Date_Heure.txt   
   - Il sera stocké :  
-        -  Sur le serveur Windows, dans C:\Users\<Utilisateur>\Desktop\export  
-        -  Sur le serveur Debian, dans /home/<Utilisateur>/  
+        -  Sur le serveur Windows, dans C:\Users\Utilisateur\Desktop\export  
+        -  Sur le serveur Debian, dans /home/Utilisateur/  
 
 
 ## Utilisation de base : comment utiliser les fonctionnalités clés
