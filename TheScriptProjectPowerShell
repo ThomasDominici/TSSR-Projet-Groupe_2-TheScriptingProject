@@ -488,7 +488,7 @@ function UserPermissions {
 function OsVersion {
     $logDate = Get-Date -Format yyyyMMdd_hhmmss
     Invoke-Command -ComputerName $cli -Credential $cred -ScriptBlock { $osInfo = Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version 
-    return $osinfo 
+    return $osInfo 
     } > C:\Users\administrateur\Desktop\export\VersionOS_$($cli)_$($logDate).txt
 }
 
