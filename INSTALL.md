@@ -221,8 +221,8 @@ Le message d'erreur n'est pas a prendre en compte, le plus important et que vous
 
 WinRM est donc configurer et pret à l'emploi
 
-## Miscellaneous 
-Pour les besoins de notre script, quelque étape rapide sont a effectuer en amont :
+## Divers 
+Pour les besoins de notre script, quelques étapes rapides sont a effectuer en amont :
 1. Création d'un dossier export
    Pour avoir l'export des informations nous devons crée un dossier export sur le bureau de notre Serveur Windows et dans l'utilisateur courant du serveur Debian (/home/<NomDelUtilisateur/)
 2. Activation de l'utilisateur Root sur votre Ubuntu
