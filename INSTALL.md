@@ -209,6 +209,10 @@ reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalA
 On redemarre notre VM
 
 Enfin ouvrez votre CLI "**PowerShell**" en tant qu'administrateur
+
+On va ajouter TOUTE les machines dans notre Trusted host avec la commande suivante :   
+Set-Item WSMan:\localhost\Client\TrustedHosts -Value *
+
 On va activer le service WinRm avec la commande suivante :
 
 ``` PowerShell
