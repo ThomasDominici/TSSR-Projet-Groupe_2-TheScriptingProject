@@ -44,7 +44,7 @@ fi
 #Initialisation du chemin pour la journalisation
 function initialisationJournalisation 
 {
-read -p "Merci de renseigner le dossier de l'utilisateur sur lequel vous voulez sauvegarder les logs ou information en précisant le chemin absolue (exemple /home/Utilisateur) : " chemin
+read -p "Merci de renseigner le dossier de l'utilisateur sur lequel vous voulez sauvegarder les logs ou information en précisant le chemin absolue : " chemin
 if [ -z $chemin ]
 then
 	echo "Merci de rentrer un chemin correct"
@@ -325,7 +325,7 @@ echo " $(date "+%F")_$(date "+%H:%M:%S")_$chemin  Connection via SSH" >> /var/lo
 #Définir des règles de pare-feu (ex. avec iptables)
 function definirReglesPareFeu() 
 {
-echo 'en travaux (il est 3h48 pas la foi de tester xD)(et la il est 4h43 et je dois debug le menu)(5h00fin du debug menu \o/)(6:18 to do list + fignolage :3)'
+echo 'en travaux'
 #ssh $utilisateurSSH@$nameClient "iptables -A INPUT -p tcp --dport 22 -j ACCEPT"
 #ssh $utilisateurSSH@$nameClient "iptables -A INPUT -j DROP"
 #echo " $(date "+%F")_$(date "+%H:%M:%S")_$chemin  firewallDefinition" >> /var/log/log_actions.log
