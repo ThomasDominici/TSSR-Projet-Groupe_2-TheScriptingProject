@@ -12,7 +12,7 @@ Pour ce projet, vous aurez besoin de quatre machines mises en réseaux. Pour l'e
 | Ubuntu 22.04   | 192.168.1.200   |
 
 Nous allons ici détailler les différentes étapes d'installation pour pouvoir utiliser deux scripts (un Bash et un Powershell) d'un ordinateur serveur vers un ordinateur client.
-Nous allons utiliser une serveur Windows server 2022 à destination d'un client Windows 10. De m^men nous utiliserons un serveur Debian à destination d'un client Ubuntu.
+Nous allons utiliser une serveur Windows server 2022 à destination d'un client Windows 10. De même nous utiliserons un serveur Debian à destination d'un client Ubuntu.
 
 
 ## Étapes d'installation et de configuration : instruction étape par étape
@@ -96,6 +96,7 @@ iface enp0s3 inet static
 auto enp0s8
 iface enp0s8 inet dhcp
 ```
+Etant sur une VM notre interfaces s'appelle "**enp0s3**", penser à verifié le nom de votre interface réseau avec la commande "**ip a**"
 
 Un fois édité comme ci-dessus, on peut redémarrer le système réseau et vérifier notre adresse IP.
 ```Bash
@@ -172,18 +173,60 @@ Nous allons aussi modifier le fichier /etc/hosts :
 
 L'ensemble de nos noms de machines est maintenant modifié.   
 
+## Installation et configuration du ssh sur le client Ubuntu
 
+Nous allons commencer par installer OpenSSH si vous ne l'avez pas fait avec la commande
 
-installe et config ssh  linux
-install et config win rm 
-creation dossier export bureau
+``` bash
+sudo apt update && sudo apt install
+sudo apt install open-ssh-serveur
+```
 
+Une fois les paquets récupérer et installée nous allons modifié le fichier de configuration afin de pouvoir effectuer la connection en ssh  
+Pour cela il suffit de vous rendre dans le fichier "**/etc/ssh/sshd_config**", décommenter la ligne "**Port 22**" et saisir les deux lignes suivante
 
+``` Bash
+AllowUsers <NomDelUtilisateur>
+PermitRootLogin Yes
+```
+\<NomDelUtilisateur> : correspond a l'utilisateur sur lequel vous souhaitez vous connecter
 
-Difficultés rencontrées : problèmes techniques rencontrés
-Solutions trouvées : Solutions et alternatives trouvées
-Tests réalisés : description des tests de performance, de sécurité, etc.
-Résultats obtenus : ce qui a fonctionné
-Améliorations possibles : suggestions d’améliorations futures
+Il vous suffit de redemarrer votre VM et le tour est jouer !
+
+## Configuration de WinRM sur le client Windows 10
+
+Pour commencer, on ouvre le menu démarrer, et on clique sur le petit rouage pour ouvrir les paramètres de votre machine  
+On selectionne Système puis Bureau à distance sur le menu de gauche   
+On active le bureau à distance  
+![img](https://github.com/ThomasDominici/TSSR-Projet-Groupe_2-TheScriptingProject/blob/Thomas/Ressources/Capture%20d'%C3%A9cran%202023-10-31%20103701.png?raw=true)
+
+Ensuite ouvrez votre CLI "**invite de commandes**" en tant qu'administrateur     
+Et entrez la ligne de commande suivante :  
+
+``` Batch
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f
+```
+On redemarre notre VM
+
+Enfin ouvrez votre CLI "**PowerShell**" en tant qu'administrateur
+On va activer le service WinRm avec la commande suivante :
+
+``` PowerShell
+Enable-PSRemoting
+```
+![img](https://github.com/ThomasDominici/TSSR-Projet-Groupe_2-TheScriptingProject/blob/Thomas/Ressources/Capture%20d'%C3%A9cran%202023-10-31%20110453.png?raw=true)
+
+Le message d'erreur n'est pas a prendre en compte, le plus important et que vous voyez le message :
+"Le service WinRM a été démarré"
+
+WinRM est donc configurer et pret à l'emploi
+
+## Miscellaneous 
+Pour les besoins de notre script, quelque étape rapide sont a effectuer en amont :
+1. Création d'un dossier export
+   Pour avoir l'export des informations nous devons crée un dossier export sur le bureau de notre Serveur Windows et dans l'utilisateur courant du serveur Debian (/home/<NomDelUtilisateur/)
+2. Activation de l'utilisateur Root sur votre Ubuntu
+   Pour les actions nécessitant les droits sudo (comme par exemple ajout d'un utilisateur) nous devons nous connecter sur l'utilisateur Root
+   
 
 
