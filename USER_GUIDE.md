@@ -95,7 +95,9 @@ On l'affiche de la manière suivante :
 ssh user@ip "instructions"
 ```
 
-Pour l'export de données, il vous faudra créer au préalable le dossier **export** dans /home/utilisateur.
+Dans le cadre des actions, il faut renseigner le dossier /var/log où seront enregistrés les actions effectuées. Dans le cadre de informations, il faudra renseigner /home/utilisateur, avec la création d'un dossier **export** dans ce dossier.  
+
+
 
 #### Sous Windows : 
 
@@ -114,7 +116,6 @@ Afin de pouvoir utiliser ce script, veuillez vous référer au guide d'installat
 Pour lancer le script (Bash ou PowerShell), il vous suffit de vous placer dans votre interpréteur de commande, en administrateur et dans le dossier où se trouve le script téléchargé. Il suffit ensuite d'écrire : ./"NomDuScript"  
 Le menu détaille l'ensemble des actions possibles, il vous faudra taper le numéro correspondant à l'action de votre choix, tout est automatique !  
 Lors de certaines erreurs de saisies de votre part, le script peut se fermer. Il faudra alors le relancer et recommencer proprement, attention aux erreurs de saisie !  
-
 
 
 ## Utilisation avancée :
