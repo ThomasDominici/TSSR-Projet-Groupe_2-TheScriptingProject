@@ -128,17 +128,17 @@ Nous allons aussi modifier le fichier hosts qui est sous C:\Windows\System32\dri
 - Pour le serveur, ajouter (avec le compte Administrator) :  
 ```
 127.0.0.1 localhost  
-192.168.56.20 srvlin 
-192.168.56.100 cliwin
-192.168.56.200 clilin
+192.168.1.20 srvlin 
+192.168.1.100 cliwin
+192.168.1.200 clilin
 ```
   
 - Pour le client, ajouter (avec le compte Administrateur) :  
 ```
 127.0.0.1 localhost  
-192.168.56.20 srvlin  
-192.168.56.10 srvwin  
-192.168.56.200 clilin
+192.168.1.20 srvlin  
+192.168.1.10 srvwin  
+192.168.1.200 clilin
 ```
 
 **Pour les machines Linux :**
@@ -154,9 +154,9 @@ Nous allons aussi modifier le fichier /etc/hosts :
 ```
 127.0.0.1 localhost
 127.0.1.1 srvlin
-192.168.56.10 srvwin
-192.168.56.100 cliwin
-192.168.56.200 clilin
+192.168.1.10 srvwin
+192.168.1.100 cliwin
+192.168.1.200 clilin
 ```
 
   
@@ -164,10 +164,10 @@ Nous allons aussi modifier le fichier /etc/hosts :
 ```
 127.0.0.1 localhost
 127.0.1.1 clilin
-192.168.56.200 clilin
-192.168.56.20 srvlin
-192.168.56.10 srvwin
-192.168.56.100 cliwin
+192.168.1.200 clilin
+192.168.1.20 srvlin
+192.168.1.10 srvwin
+192.168.1.100 cliwin
 ```
 
 
